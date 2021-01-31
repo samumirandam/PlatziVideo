@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import HelloWord from "./Components/HelloWord";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './containers/App';
 
-ReactDOM.render(<HelloWord />, document.getElementById('app')); 
+ReactDOM.render(<App />, document.getElementById('app'));
