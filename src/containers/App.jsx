@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import Header from '../Components/Header';
 import Search from '../Components/Search';
@@ -7,48 +7,50 @@ import Caruosel from '../Components/Carousel';
 import CaruoselItem from '../Components/CarouselItem';
 import Footer from '../Components/Footer';
 
+import useInitialState from '../hooks/useInitialState';
+
 import '../assets/styles/App.scss';
 
-const App = () => {
-  const [videos, setVideos] = useState({
-    mylist: [],
-    trends: [],
-    originals: [],
-  });
-  useEffect(() => {
-    fetch('http://localhost:3000/initalState')
-      .then((response) => response.json())
-      .then((data) => setVideos(data));
-  }, []);
+const API = 'http://localhost:3000/initalState';
 
-  console.log(videos);
+const App = () => {
+  const initialState = useInitialState(API);
 
   return (
     <div className='app'>
       <Header />
       <Search />
 
-      {videos.mylist.length > 0 && (
+      {initialState.mylist.length > 0 && (
         <Categories title='Mi lista'>
           <Caruosel>
-            <CaruoselItem />
+            {initialState.mylist.map((item) => (
+              <CaruoselItem key={item.id} {...item} />
+            ))}
           </Caruosel>
         </Categories>
       )}
 
-      <Categories title='Tendencias'>
-        <Caruosel>
-          {videos.trends.map((item) => (
-            <CaruoselItem key={item.id} {...item} />
-          ))}
-        </Caruosel>
-      </Categories>
+      {initialState.trends.length > 0 && (
+        <Categories title='Tendencias'>
+          <Caruosel>
+            {initialState.trends.map((item) => (
+              <CaruoselItem key={item.id} {...item} />
+            ))}
+          </Caruosel>
+        </Categories>
+      )}
 
-      <Categories title='Originales de Platzi Video'>
-        <Caruosel>
-          <CaruoselItem />
-        </Caruosel>
-      </Categories>
+      {initialState.originals.length > 0 && (
+        <Categories title='Originales de Platzi Video'>
+          <Caruosel>
+            {initialState.originals.map((item) => (
+              <CaruoselItem key={item.id} {...item} />
+            ))}
+          </Caruosel>
+        </Categories>
+      )}
+
       <Footer />
     </div>
   );
