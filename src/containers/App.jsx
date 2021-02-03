@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Header from '../Components/Header';
 import Search from '../Components/Search';
@@ -9,38 +9,48 @@ import Footer from '../Components/Footer';
 
 import '../assets/styles/App.scss';
 
-const App = () => (
-  <div className='app'>
-    <Header />
-    <Search />
+const App = () => {
+  const [videos, setVideos] = useState({
+    mylist: [],
+    trends: [],
+    originals: [],
+  });
+  useEffect(() => {
+    fetch('http://localhost:3000/initalState')
+      .then((response) => response.json())
+      .then((data) => setVideos(data));
+  }, []);
 
-    <Categories title='Mi lista'>
-      <Caruosel>
-        <CaruoselItem />
-        <CaruoselItem />
-        <CaruoselItem />
-        <CaruoselItem />
-      </Caruosel>
-    </Categories>
+  console.log(videos);
 
-    <Categories title='Tendencias'>
-      <Caruosel>
-        <CaruoselItem />
-        <CaruoselItem />
-        <CaruoselItem />
-        <CaruoselItem />
-        <CaruoselItem />
-      </Caruosel>
-    </Categories>
+  return (
+    <div className='app'>
+      <Header />
+      <Search />
 
-    <Categories title='Originales de Platzi Video'>
-      <Caruosel>
-        <CaruoselItem />
-        <CaruoselItem />
-      </Caruosel>
-    </Categories>
-    <Footer />
-  </div>
-);
+      {videos.mylist.length > 0 && (
+        <Categories title='Mi lista'>
+          <Caruosel>
+            <CaruoselItem />
+          </Caruosel>
+        </Categories>
+      )}
 
+      <Categories title='Tendencias'>
+        <Caruosel>
+          {videos.trends.map((item) => (
+            <CaruoselItem key={item.id} {...item} />
+          ))}
+        </Caruosel>
+      </Categories>
+
+      <Categories title='Originales de Platzi Video'>
+        <Caruosel>
+          <CaruoselItem />
+        </Caruosel>
+      </Categories>
+      <Footer />
+    </div>
+  );
+};
 export default App;
