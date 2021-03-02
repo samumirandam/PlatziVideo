@@ -1,20 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import { loginRequest } from '../actions';
 
 import '../assets/styles/components/Login.scss';
 
 import googleIcon from '../assets/static/google-icon.png';
 import twitterIcon from '../assets/static/twitter-icon.png';
 
-const Login = () => {
+const Login = (props) => {
+  const [form, setValues] = useState({
+    email: '',
+  });
+
+  const handleInput = (event) => {
+    setValues({
+      ...form,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    props.loginRequest(form);
+    props.history.push('/');
+  };
+
   return (
     <section className='login'>
       <section className='login__container'>
         <h2>Inicia sesión</h2>
-        <form className='login__container--form'>
-          <input className='input' type='text' placeholder='Correo' />
-          <input className='input' type='password' placeholder='Contraseña' />
-          <button className='button' type='button'>
+        <form className='login__container--form' onSubmit={handleSubmit}>
+          <input
+            name='email'
+            className='input'
+            type='text'
+            placeholder='Correo'
+            onChange={handleInput}
+          />
+          <input
+            name='password'
+            className='input'
+            type='password'
+            placeholder='Contraseña'
+            onChange={handleInput}
+          />
+          <button className='button' type='submit'>
             Iniciar sesión
           </button>
           <div className='login__container--remember-me'>
@@ -28,13 +60,11 @@ const Login = () => {
         <section className='login__container--social-media'>
           <div>
             <img src={googleIcon} alt='Login con google' />
-            Inicia sesión con
-            Google
+            Inicia sesión con Google
           </div>
           <div>
             <img src={twitterIcon} alt='Login con twitter' />
-            Inicia sesión con
-            Twitter
+            Inicia sesión con Twitter
           </div>
         </section>
         <p className='login__container--register'>
@@ -46,4 +76,8 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapDispatchToProps = {
+  loginRequest,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
