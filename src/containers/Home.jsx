@@ -1,58 +1,61 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import Header from '../Components/Header';
+//import reducer from "../reducers"
+
 import Search from '../Components/Search';
 import Categories from '../Components/Categories';
 import Caruosel from '../Components/Carousel';
 import CaruoselItem from '../Components/CarouselItem';
-import Footer from '../Components/Footer';
 
-import useInitialState from '../hooks/useInitialState';
-
-import '../assets/styles/App.scss';
-
-const API = 'http://localhost:3000/initalState';
-
-const App = () => {
-  const initialState = useInitialState(API);
-
+const Home = ({ myList, trends, originals }) => {
   return (
-    <div className='app'>
-      <Header />
+    <>
       <Search />
 
-      {initialState.mylist.length > 0 && (
+      {myList.length > 0 && (
         <Categories title='Mi lista'>
           <Caruosel>
-            {initialState.mylist.map((item) => (
-              <CaruoselItem key={item.id} {...item} />
+            {myList.map((item) => (
+              <CaruoselItem
+                key={item.id}
+                {...item}
+                isList
+              />
             ))}
           </Caruosel>
         </Categories>
       )}
 
-      {initialState.trends.length > 0 && (
+      {trends.length > 0 && (
         <Categories title='Tendencias'>
           <Caruosel>
-            {initialState.trends.map((item) => (
+            {trends.map((item) => (
               <CaruoselItem key={item.id} {...item} />
             ))}
           </Caruosel>
         </Categories>
       )}
 
-      {initialState.originals.length > 0 && (
+      {originals.length > 0 && (
         <Categories title='Originales de Platzi Video'>
           <Caruosel>
-            {initialState.originals.map((item) => (
+            {originals.map((item) => (
               <CaruoselItem key={item.id} {...item} />
             ))}
           </Caruosel>
         </Categories>
       )}
-
-      <Footer />
-    </div>
+    </>
   );
 };
-export default App;
+
+const mapStateToProps = (state) => {
+  return {
+    myList: state.myList,
+    trends: state.trends,
+    originals: state.originals,
+  };
+};
+
+export default connect(mapStateToProps, null)(Home);
