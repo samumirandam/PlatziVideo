@@ -7,21 +7,29 @@ import Search from '../Components/Search';
 import Categories from '../Components/Categories';
 import Caruosel from '../Components/Carousel';
 import CaruoselItem from '../Components/CarouselItem';
+import Header from '../Components/Header';
 
-const Home = ({ myList, trends, originals }) => {
+const Home = ({ myList, trends, originals, searchList }) => {
   return (
     <>
-      <Search />
+      <Header />
+      <Search isHome />
+
+      {searchList.length > 0 && (
+        <Categories title='Busqueda: '>
+          <Caruosel>
+            {searchList.map((item) => (
+              <CaruoselItem key={item.id} {...item} />
+            ))}
+          </Caruosel>
+        </Categories>
+      )}
 
       {myList.length > 0 && (
         <Categories title='Mi lista'>
           <Caruosel>
             {myList.map((item) => (
-              <CaruoselItem
-                key={item.id}
-                {...item}
-                isList
-              />
+              <CaruoselItem key={item.id} {...item} isList />
             ))}
           </Caruosel>
         </Categories>
@@ -55,6 +63,7 @@ const mapStateToProps = (state) => {
     myList: state.myList,
     trends: state.trends,
     originals: state.originals,
+    searchList: state.searchList,
   };
 };
 
